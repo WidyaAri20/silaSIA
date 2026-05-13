@@ -1,0 +1,165 @@
+/* --------------------------------
+   Responsive: Tablet & Mobile (<= 768px)
+   Semua grid/flex berubah ke 1 kolom/baris
+   agar konten tidak terlalu sempit di layar kecil.
+   -------------------------------- */
+   
+/* Tablet & Mobile */
+@media (max-width: 768px) {
+    .navbar-inner {
+        flex-wrap: wrap;
+    }
+
+    .hamburger {
+        display: flex;
+        /* tampilkan hamburger */
+    }
+
+    nav {
+        width: 100%;
+        order: 3;
+    }
+
+    .nav-menu {
+        display: none;
+        flex-direction: column;
+        gap: 0;
+        width: 100%;
+        padding: 8px 0;
+        border-top: 1px solid #334155;
+        margin-top: 12px;
+    }
+
+    .nav-menu li a {
+        display: block;
+        padding: 10px 0;
+        border-radius: 0;
+    }
+
+    .nav-toggle:checked~nav .nav-menu {
+        display: flex;
+    }
+
+    /* SAMBUNG DARI SINI */
+    /* ================== */
+
+    .nav-menu {
+        gap: 4px;
+    }
+
+    /* Judul hero lebih kecil di mobile */
+    .hero h1 {
+        font-size: 1.5rem;
+    }
+
+    /* Tombol berubah jadi vertikal (kolom) */
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Cards: dari 2 kolom → 1 kolom */
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Steps & stats berubah ke arah vertikal */
+    .steps-grid {
+        flex-direction: column;
+    }
+
+    .stats-grid {
+        flex-direction: column;
+    }
+
+    /* Footer: dari 2 kolom → 1 kolom */
+    .footer-inner {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+}
+
+
+
+/* --------------------------------
+   Responsive: Layar Sangat Kecil (<= 480px)
+   Untuk smartphone kecil:
+   - Judul lebih kecil lagi
+   - Tombol lebar penuh (100%)
+   -------------------------------- */
+/* Small Mobile */
+@media (max-width: 480px) {
+    .hero h1 {
+        font-size: 1.25rem;
+    }
+
+    /* Tombol mengisi penuh lebar layar */
+    .btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+
+/* 1.	Perbarui kelas-kelas tombol (.btn, .nav-menu li a), dan kartu layanan (.card) pada blok CSS yang ada di atas media query dengan menambahkan properti atribut transition. Contohnya pada .btn, ubah menjadi: */
+
+.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    
+    /* Tambah ini */
+    transition: background-color 0.3s, color 0.3s, transform 0.2s; 
+    /* / Menambahkan sifat efek lambat  / */
+}
+
+/* 2.	Pada bagian .card dan efek hover-nya (.card:hover / .btn-primary:hover), tambahkan properti transform (opsional pada properti hover .btn-outline:hover juga). Cari deklarasi gaya asli mereka dan ubah menjadi: */
+
+.card {
+    /* / (kode card sebelumnya) / */
+    background-color: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 20px;
+
+    /* Tambahkan disini transisi*/
+    transition: border-color 0.3s, transform 0.2s;
+}
+
+/* Tambahkan transisi untuk efek hover */
+.card:hover {
+    border-color: #475569;
+    transform: translateY(-2px); 
+    /* Menggeser sedikit ke atas mirip melayang */
+}
+
+
+/* --------------------------------
+MEMBUAT ANIMASI FADE IN UNTUK SECTION HERO   
+Animasi CSS (@keyframes)
+   Mendefinisikan gerakan bernama 'fadeIn':
+   - from: posisi awal (tersembunyi, geser ke bawah)
+   - to: posisi akhir (terlihat, posisi normal)
+   -------------------------------- */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        /* transparan penuh */
+        transform: translateY(20px);
+        /* geser 20px ke bawah */
+    }
+
+    to {
+        opacity: 1;
+        /* terlihat penuh */
+        transform: translateY(0);
+        /* posisi normal */
+    }
+}
+
+/* Hero section mendapat animasi fadeIn selama 0.6 detik */
+.hero {
+    animation: fadeIn 0.6s ease;
+}
