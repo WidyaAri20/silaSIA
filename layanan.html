@@ -38,7 +38,77 @@
             <div class="container">
                 <h1>Ajukan Layanan Akademik</h1>
                 <p class="section-desc">Lengkapi form di bawah untuk mengajukan layanan akademik Anda.</p>
-                <p><em>Form pengajuan akan tersedia pada tahap berikutnya.</em></p>
+
+                <!-- Nama Lengkap, NIM, Prodi, Jenis Layanan, Tgl Pengajuan, Ket -->
+                <!-- AWAL FORM -->
+                <form action="#" target="_blank" method="post">
+                    <fieldset>
+                        <legend>Data Pengajuan</legend>
+
+                        <!-- Input Nama Lengkap -->
+                        <div class="form-group">
+                            <label for="nama">Nama Lengkap</label>
+                            <input type="text" id="nama">
+                        </div>
+                        
+                        <!-- NIM dan Prodi -->
+                        <div>
+                            <!-- NIM -->
+                            <div class="form-group">
+                                <label for="nim">NIM</label>
+                                <input type="text" id="nim">
+                            </div>
+                            <!-- Prodi -->
+                            <div class="form-group">
+                                <label for="prodi">Program Studi</label>
+                                <div>
+                                    <select name="prodi" id="prodi">
+                                        <option value="">-- Pilih Program Studi --</option>
+                                        <option value="Sistem Informasi">Sistem Informasi</option>
+                                        <option value="Teknik Informatika">Teknik Informatika</option>
+                                        <option value="Teknologi Informasi">Teknologi Informasi</option>
+                                        <option value="Manajemen">Manajemen</option>
+                                        <option value="Akuntansi">Akuntansi</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Jenis Layanan dan Tgl Pengajuan -->
+                            <!-- Jenis Layanan -->
+                            <div class="form-group">
+                                <label for="jenis">Jenis Layanan</label>
+                                <div>
+                                    <select name="jenis" id="jenis">
+                                        <option value="">-- Pilih Layanan --</option>
+                                        <option value="SKA">SKA - Surat Aktif Kuliah</option>
+                                        <option value="CAK">CAK - Cuti Akademik</option>
+                                        <option value="TNM">TNM - Transkrip Nilai</option>
+                                        <option value="PDA">PDA - Perubahan Data</option>
+                                    </select>
+                                </div>
+                                
+                            </div>
+                            <!-- Tanggal -->
+                            <div class="form-group">
+                                <label for="tanggal">Tanggal Pengajuan</label>
+                                <input type="date" id="tanggal">
+                            </div>
+                            
+                            <!-- Keterangan -->
+                            <div class="form-group">
+                                <label for="keterangan">Keterangan</label>
+                                <input type="text" id="keterangan" name="keterangan">
+                            </div>
+
+                            <div class="form-action">
+                                <button type="submit" class="btn btn-primary">Ajukan Sekarang</button>
+                                <button type="reset" class="btn btn-secondary">Reset</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+                
+                <!-- AKHIR FORM -->
             </div>
         </section>
     </main>
