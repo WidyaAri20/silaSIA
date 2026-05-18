@@ -516,3 +516,89 @@ h3 {
         text-align: center;
     }
 }
+
+/* FORM - SILA */
+.form-card {
+    max-width: 640px;
+    /* lebar max form*/
+    margin: 0 auto;
+    /* tengah halaman */
+}
+
+fieldset {
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 24px;
+    background-color: #1e293b;
+}
+
+legend {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #f1f5f9;
+    padding: 0 8px;
+}
+
+/* Form Group 
+1 kelompok 1 label + 1 input*/
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    /* label mengambil satu baris penuh */
+    font-size: 0.87rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    margin-bottom: 6px;
+    /* jarak lebel ke input */
+}
+
+/* Semua field lebar sama 100%, padding, warna gelap dan border tipis */
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    /* lebar seukuran containernya 640px */
+    padding: 10px 14px;
+    background-color: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    color: #e2e2e2;
+    font-size: 0.9rem;
+    font-family: inherit;
+    /* mengikuti font body */
+    outline: none;
+    transition: border-color 0.5s;
+}
+
+/* saat di klik (focus): border jadi warna biru terang */
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #1d4ed8;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.form-actions .btn {
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+}
+
+.form-actions .btn-outline {
+    border: 1px solid #334155;
+    background: none;
+}
