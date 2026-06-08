@@ -22,20 +22,20 @@ function getData() {
 }
 
 // 2. Menyimpan data ke localStorage (Array --> JSON)
-function saveData() {
+function saveData(data) {
    localStorage.setItem('sila_data', JSON.stringify(data));
 }
 
 // 3. Format Tanggal (dd-MM-yyy --> 04 Juni 2026)
-function formatTanggal(dataStr) {  
+function formatTanggal(dateStr) {  
    const bulan = [
       'Januari', 'Februari', 'Maret', 'April', 'Mei', 
-      'Juni', 'July', 'Agustus', 'September', 'Oktober', 
+      'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 
       'November', 'Desember'
    ];
 
-   const d = new Date(dataStr); // Contoh Format : '04 Juni 2026'
-   return d.getDate() + '' + bulan[d.getMonth()] + '' +d.getFullYear();
+   const d = new Date(dateStr); // Contoh Format : '04 Juni 2026'
+   return d.getDate() + ' ' + bulan[d.getMonth()] + ' ' +d.getFullYear();
 }
 
 // 4. FORM HANDLING
@@ -43,22 +43,20 @@ function formatTanggal(dataStr) {
 // Tugas Form: Mengumpulkan semua input --> validasi --> create data baru --> update data --> Simpan ke localStorage
 
 function initForm() {
-   const form = document.getElementById('formPangajuan');
+   const form = document.getElementById('formPengajuan');
    if (!form) return; // Jika halaman tidak punya form, keluar
 
    //Deteksi mode edit atau tidak?
-   // Jika parameter URL edit ditemukan. maka tata letak lama ditampilkan, jika tidak maka adalah mode tambah(creae)
+   // Jika parameter URL edit ditemukan. maka tata letak lama ditampilkan, jika tidak maka adalah mode tambah(create)
 
-   const editId = urlParms.get('edit');
+   const urlParams = new URLSearchParams(window.location.search);
+   const editId = urlParams.get('edit');
    let editMode = false;
 
-   if (editID) {
+   if (editId) {
       // cari item yang akan diedit berdasarkan ID
       const data = getData();
-      const itemToEdit = data.find (function(item){
-         return item.id == editId;
-      });
-
+      const itemToEdit = data.find (function(item){ return item.id == editId; });
       if (itemToEdit) {
          editMode = true; // mode edit aktif
          // Isi field form dengan data yang ada (pre-fill)
@@ -77,13 +75,14 @@ function initForm() {
          if (btnSumbit) btnSumbit.innerHTML = '✏️ Simpan Perubahan'
       }
    }
+
    // Submit (create)
    // Menggunakan event listener untuk submit form (eventnya 'submit')
    // Sebelum submit, form akan melakukan validasi
    // Saat Tombol Ajukan di klik: 1. Ambil data dari form. 2. Validasi Data, 3. Simpan Data, 4. Redirect ke Halaman Riwayat
 
-   // element.addElementListener('event', function())
-   form.addElementListener('submit', function(e){
+   // element.addEventListener('event', function())
+   form.addEventListener('submit', function(e){
       e.preventDefault(); // cegah form reload halaman
       // 1. Ambil nilai semua field dengan menggunakan .value
       const nama = document.getElementById('nama').value.trim();
@@ -92,7 +91,7 @@ function initForm() {
       const layanan = document.getElementById('layanan').value;
       const tanggal = document.getElementById('tanggal').value;
       const keterangan = document.getElementById('keterangan').value.trim();
-      const errorEl = document.getElementById('formError').value.trim();
+      const errorEl = document.getElementById('formError');
       // trim = menghilangkan karakter-karakter
 
       errorEl.textContent = ''; // reset pesan error sebelum validasi
@@ -113,7 +112,7 @@ function initForm() {
       const data = getData();
       if (editMode) { // jika mode edit
          // Update / Timpa isian lama dengan isian form barusan
-         for (let i=0; i< data.length; i++) {
+         for (let i=0; i < data.length; i++) {
             //  Jika id sama dengan edit Id maka mode edit (timpa data)
             if (data[i].id == editId) {
                data[i].nama = nama;
@@ -136,17 +135,131 @@ function initForm() {
             keterangan: keterangan
          };
          data.push(item); // tambah data ke array
-         console.log(data); // tmapilkan di console log
       }
+
       saveData(data); // Simpan ke localstorage
+
       form.reset();
       errorEl.textContent = ''; // kosongkan pesan error
-      alert(editId ? '✅ Perubahan berhasil disimpan!' : '✅ Pengajuan berhasil disimpan!')
+      alert(editMode ? '✅ Perubahan berhasil disimpan!' : '✅ Pengajuan berhasil disimpan!')
       window.location.href = 'riwayat.html' // pindah halaman ke riwayat
    });
 }
 
+// ===================================================
+// TABEL RIWAYAT
+// Menampilkan semua data pengajuan dalam tabel HTML,
+// Serta menangani tombol Edit dan Hapus per baris.
+// ===================================================
+
+function initRiwayat() {
+   // Ambil elemen-elemen DOM yang dibutuhkan
+   const tbody = document.getElementById('tableBody');
+   const emptyState = document.getElementById('emptyState');
+   const dataCount = document.getElementById('dataCount');
+   const btnHapusSemua = document.getElementById('btnHapusSemua');
+
+   if (!tbody) return; // jika bukan halaman riwayat, keluar
+
+   renderTable(); // tampilkan tabel saat halaman pertama dimuat
+
+   // -- Event Listener: Tombol Hapus Semua --
+   if (btnHapusSemua) {
+      btnHapusSemua.addEventListener('click', function () {
+         // confirm() menampilkan dialog konfirmasi, mengembalikan true/false
+         if (confirm('Apakah Anda yakin ingin menghapus semua data?')) {
+            saveData([]); // simpan array kosong -> hapus semua
+            renderTable();
+         }
+      });
+   }
+
+   // -- Fungsi Render Tabel --
+   // Membuat baris-baris tabel secara dinamis dari data localStorage.
+   // Data Array | Baris HTML | Tabel
+   function renderTable() {
+      const data = getData();
+
+      // Update teks counter jumlah data
+      if (dataCount) {
+         dataCount.textContent = data.length + ' pengajuan';
+      }
+
+      // Jika data kosong: tampilkan empty state, sembunyikan tombol
+      if (data.length === 0) {
+         tbody.innerHTML = '';
+         if (emptyState) emptyState.style.display = 'block';
+         if (btnHapusSemua) btnHapusSemua.style.display = 'none';
+         return;
+      }
+
+      // Sembunyikan empty state, tampilkan tombol hapus semua
+      if (emptyState) emptyState.style.display = 'none';
+      if (btnHapusSemua) btnHapusSemua.style.display = 'inline-block';
+
+      // Buat baris tabel (tr) untuk setiap item data
+      tbody.innerHTML = ''; // bersihkan isi tbody terlebih dulu
+      for (let i = 0; i < data.length; i++) {
+         const item = data[i];
+         const tr = document.createElement('tr'); // buat elemen <tr> baru
+
+         // innerHTML: isi baris dengan data dari objek item
+         tr.innerHTML =
+            '<td>' + (i + 1) + '</td>' +
+            '<td>' + item.nama + '</td>' +
+            '<td>' + item.nim + '</td>' +
+            '<td>' + item.layanan + '</td>' +
+            '<td>' + formatTanggal(item.tanggal) + '</td>' +
+            '<td>' +
+            // Tombol edit: data-id digunakan untuk mengetahui item mana yang diedit
+            '<button class="btn-edit" data-id="' + item.id + '">✏️ Edit</button>' +
+            '<button class="btn-hapus" data-id="' + item.id + '">🗑️ Hapus</button>' +
+            '</td>';
+         tbody.appendChild(tr); // tambahkan baris ke table
+      }
+
+      // -- Event Listener: Tombol Edit --
+      // querySelectorAll mengembalikan semua elemen dengan kelas .btn-edit
+      const btnEdit = document.querySelectorAll('.btn-edit');
+      // Mengirim ID data ke halaman form.
+      btnEdit.forEach(function (btn) {
+         btn.addEventListener('click', function () {
+            const id = this.getAttribute('data-id'); // ambil ID dari atribut
+            // Redirect ke form dengan parameter edit di URL
+            window.location.href = 'layanan.html?edit=' + id;
+         });
+      });
+
+      // -- Event Listener: Tombol Hapus --
+      const btnHapus = document.querySelectorAll('.btn-hapus');
+      // Menghapus data berdasarkan ID.
+      btnHapus.forEach(function (btn) {
+         btn.addEventListener('click', function() {
+            const id = Number(this.getAttribute('data-id'));
+            if (confirm('Hapus pengajuan ini?')) {
+               let data = getData();
+               // filter(): buat array baru tanpa item yang dihapus
+               data = data.filter(function (item) {
+                  return item.id !== id; // pertahankan semua kecuali yang dihapus               
+               });
+               saveData(data);
+               renderTable(); // render ulang tabel setelah penghapusan
+            }
+         });
+      });
+   }
+}
+
+
+// ======================================================
 // INIT (INSISIALISASI)
+// DOMContentLoaded: event yang terjadi ketika
+// Seluruh HTML selesai dimuat oleh browser.
+// Pastikan JavaScript dijalankan SETELAH HTML tersedia.
+// =======================================================
+
+// Menjalankan: 1. initForm() 2. initRiwayat() Setelah HTML selesai dimual.
 document.addEventListener('DOMContentLoaded', function (){
-   initForm();
-})
+   initForm(); // inisialisasi form di halaman layanan.html
+   initRiwayat(); // inisialisasi form di halaman riwayat.html
+});
